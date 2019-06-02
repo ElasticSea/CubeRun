@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,11 @@ public class Player : MonoBehaviour
     public float sidewaysVelocity = 10;
     public float jumpForce = 1000;
     [SerializeField] private bool alive = true;
-    
+
+    public event Action OnDeathEvent = () => { };
+
+    public bool Alive => alive;
+
     void Awake()
     {
         // Move center of mass lower to ground, so the cube does not tumble
@@ -17,7 +22,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (alive == false) return;
+        if (Alive == false) return;
 
         var isTouchingGround = Physics.Linecast(transform.position , transform.position + Vector3.down * .51f);
         
@@ -34,7 +39,7 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (alive == false) return;
+        if (Alive == false) return;
         
         var rb = GetComponent<Rigidbody>();
         
@@ -47,5 +52,6 @@ public class Player : MonoBehaviour
     {
         alive = false;
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        OnDeathEvent();
     }
 }
