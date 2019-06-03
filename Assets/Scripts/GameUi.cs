@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUi : MonoBehaviour
@@ -8,7 +10,13 @@ public class GameUi : MonoBehaviour
     
     public void ShowDeathScreen()
     {
-        deathScreen.gameObject.SetActive(true);
+        StartCoroutine(RestartSceneInSeconds(2));
+    }
+
+    private IEnumerator RestartSceneInSeconds(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void SetScore(float score)
